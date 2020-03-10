@@ -10,6 +10,8 @@ public class Thread {
 
         try {
             java.lang.Thread.sleep(processTime);
-        } catch (Exception ignored) {}
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

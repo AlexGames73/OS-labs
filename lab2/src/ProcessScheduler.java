@@ -1,40 +1,33 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProcessScheduler {
-    private Process[] processes;
-    private Integer countProcesses;
+    private List<Process> processes;
+    private List<Thread> threads;
 
     public ProcessScheduler() {
-        countProcesses = 0;
-        processes = new Process[countProcesses];
+        processes = new ArrayList<>();
+        threads = new ArrayList<>();
     }
 
     public void addProcess(Process process) {
-        if (countProcesses == processes.length) {
-            Process[] buffer = new Process[countProcesses * 2 + 1];
-            System.arraycopy(processes, 0, buffer, 0, countProcesses);
-            processes = buffer;
-        }
-
-        processes[countProcesses] = process;
-        countProcesses++;
+        processes.add(process);
+        threads.addAll(process.getThreads());
     }
 
     public void run() {
         while (true) {
-            for (int i = 0; i < countProcesses; i++) {
-                switch (processes[i].getPriority()) {
-                    case Low:
-                        processes[i].continueProcess(100);
-                        break;
-                    case Middle:
-                        processes[i].continueProcess(300);
-                        break;
-                    case High:
-                        processes[i].continueProcess(700);
-                        break;
-                    case Realtime:
-                        processes[i].continueProcess(1500);
-                        break;
+            for (Process process : processes) {
+                process.activate();
+                int processTime = process.getPriority().getTime();
+                process.continueProcess(processTime);
+                int processTimeThread = Math.min(processTime, 20);
+                int countCalls = processTime / processTimeThread;
+                for (int i = 0; i < countCalls; i++) {
+                    threads.get(process.getPointer() % threads.size()).continueThread(processTimeThread);
+                    process.setPointer((process.getPointer() + 1) % threads.size());
                 }
+                process.freeze();
             }
         }
     }

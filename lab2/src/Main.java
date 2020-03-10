@@ -15,10 +15,10 @@ public class Main {
 
         process1.addThread(new Thread("thread1"));
         process1.addThread(new Thread("thread2"));
+        process1.addThread(new Thread("thread3"));
 
         process2.addThread(new Thread("thread1"));
         process2.addThread(new Thread("thread2"));
-        process2.addThread(new Thread("thread3"));
 
         process3.addThread(new Thread("thread1"));
         process3.addThread(new Thread("thread2"));

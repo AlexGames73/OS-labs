@@ -1,35 +1,51 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Process {
-    private Thread[] threads;
-    private Integer countThreads;
+    private List<Thread> threads;
+    private Integer pointer;
     private String name;
     private PriorityType priority;
+    private Boolean isActive;
 
     public Process(String name, PriorityType priority) {
-        countThreads = 0;
-        threads = new Thread[countThreads];
+        pointer = 0;
+        threads = new ArrayList<>();
 
         this.name = name;
         this.priority = priority;
     }
 
     public void addThread(Thread thread) {
-        if (countThreads == threads.length) {
-            Thread[] buffer = new Thread[countThreads * 2 + 1];
-            System.arraycopy(threads, 0, buffer, 0, countThreads);
-            threads = buffer;
-        }
+        threads.add(thread);
+    }
 
-        threads[countThreads] = thread;
-        countThreads++;
+    public void activate() {
+        isActive = true;
     }
 
     public void continueProcess(int processTime) {
         System.out.println(String.format("Process %s is started for %d", name, processTime));
-        int processTimeEveryThread = Math.min((processTime / countThreads) / 5 * 5, 70);
-        int countCalls = processTime / processTimeEveryThread;
-        for (int i = 0; i < countCalls; i++) {
-            threads[i % countThreads].continueThread(processTimeEveryThread);
-        }
+    }
+
+    public void freeze() {
+        isActive = false;
+    }
+
+    public List<Thread> getThreads() {
+        return threads;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public Integer getPointer() {
+        return pointer;
+    }
+
+    public void setPointer(Integer pointer) {
+        this.pointer = pointer;
     }
 
     public PriorityType getPriority() {
