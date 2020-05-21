@@ -17,12 +17,20 @@ public class Main {
     public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
     public static void main(String[] args) throws Exception {
-        Drive drive = new Drive(100000);
-        drive.createFile(1);
-        drive.createFolder(1000);
-        drive.createFolder(2000);
-        drive.move(1000, 3000);
-        drive.clear(1);
-        drive.copy(3000, 1);
+        Drive drive = new Drive(1000);
+        Directory main = drive.createDirectory("dirMain", null);
+        File file1 = drive.createFile("file1", main, "hello world!!!");
+        Directory src = drive.createDirectory("src", main);
+        drive.selectFile(file1);
+        file1 = drive.moveFile(file1, src);
+        drive.selectFile(file1);
+        File file1_2 = drive.copyFile(file1, main);
+        drive.selectFile(file1);
+        drive.removeFile(file1);
+        drive.selectFile(file1_2);
+        Directory kek = drive.createDirectory("kek", main);
+        file1_2 = drive.moveFile(file1_2, src);
+        drive.moveDirectory(src, kek);
+        drive.removeDirectory(src);
     }
 }
